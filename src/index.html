@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./output.css">
+    <title>Weather App</title>
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div class="min-h-screen w-full bg-zinc-950 text-zinc-100 font-sans relative overflow-x-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-125 bg-radial from-zinc-900/40 via-transparent to-transparent pointer-events-none z-0"></div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+    <nav class="w-full bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 px-6 py-4 sticky top-0">
+      <div class="max-w-xl mx-auto flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2.5 shrink-0 select-none">
+          <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-50 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
+            </svg>
+          </div>
+          <span class="text-sm font-semibold tracking-tight text-zinc-50 hidden sm:block">Weather App</span>
+        </div>
+        <div class="w-full max-w-xs relative group">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-zinc-400 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.603 10.601Z" />
+            </svg>
+          </div>
+          <input id="cityInput" type="text" autocomplete="off" placeholder="Search city..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-4 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-zinc-700 transition-all">
+          <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none sm:flex">
+            <kbd class="text-[10px] font-sans font-medium text-zinc-600 bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800"></kbd>
+          </div>
+
+          
+          <ul id="suggestions" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-2xl z-20 max-h-60 overflow-y-auto"></ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-1 flex items-center justify-center p-6">
+      <div class="w-full max-w-xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-xl text-zinc-100 rounded-2xl p-6 shadow-2xl">
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="cityName" class="text-xl font-semibold tracking-tight text-zinc-50"></h2>
+              <span id="time-zone" class="inline-flex items-center rounded-md bg-zinc-900 px-2 py-1 text-xs font-medium text-zinc-400 ring-1 ring-inset ring-zinc-800"></span>
+            </div>
+            <p id="lastUpdated" class="text-xs text-zinc-500 mt-1"></p>
+          </div>
+          <div class="text-right">
+            <p id="dateLabel" class="text-sm font-medium text-zinc-300"></p>
+            <p id="conditionText" class="text-xs text-zinc-500 mt-0.5">Scattered Clouds</p>
+          </div>
+        </div>
+
+        <div class="py-8 flex items-center justify-between">
+          <div class="flex items-baseline gap-2">
+            <span id="temp" class="text-7xl font-light tracking-tighter text-zinc-50"></span>
+            <span class="text-4xl font-light text-zinc-400">°C</span>
+          </div>
+          <div class="flex items-center gap-4 bg-zinc-900/50 border border-zinc-800/60 rounded-xl p-3 pr-5">
+            <div class="w-12 h-12 text-zinc-400">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-zinc-500 font-medium uppercase tracking-wider">Feels like</p>
+              <p id="feelsLike" class="text-base font-semibold text-zinc-200"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3">
+            <span class="text-[11px] text-zinc-500 font-medium uppercase tracking-wider block">Wind Direction</span>
+            <span id="wind" class="text-sm font-semibold text-zinc-200 mt-1 block"></span>
+          </div>
+          <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3">
+            <span class="text-[11px] text-zinc-500 font-medium uppercase tracking-wider block">Humidity</span>
+            <span id="humidity" class="text-sm font-semibold text-zinc-200 mt-1 block"></span>
+          </div>
+          <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3">
+            <span class="text-[11px] text-zinc-500 font-medium uppercase tracking-wider block">UV Index</span>
+            <span id="uv" class="text-sm font-semibold text-zinc-200 mt-1 block"> <span class="text-xs text-zinc-500 font-normal ml-1"></span></span>
+          </div>
+          <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3">
+            <span class="text-[11px] text-zinc-500 font-medium uppercase tracking-wider block">Air Quality (PM 2.5)</span>
+            <span id="aqi" class="text-sm font-semibold  mt-1 flex items-center gap-1.5">
+              <span id="blink" class="w-1.5 h-1.5 rounded-full  animate-pulse"></span>
+               <span class="text-xs text-zinc-500 font-normal"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>
