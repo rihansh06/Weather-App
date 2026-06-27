@@ -1,1 +1,51 @@
 @import "tailwindcss";
+
+body{
+    margin:0;
+}
+
+#appBackground{
+    background-size: cover;
+    background-position: center;
+    background-repeat:no-repeat;
+    transition: background-image 1s ease,
+                background-color 1s ease;
+}
+.sunny-day{
+     background-image: url(https://i.pinimg.com/1200x/d0/b9/07/d0b907e688454d748641639e8d6c56c6.jpg);
+}
+
+.cloudy-day{
+    background-image: url(https://i.pinimg.com/736x/14/11/18/141118b2c17b936a5b2949cc25083f04.jpg);
+}
+
+.rain-day{
+    background-image: url(https://i.pinimg.com/1200x/67/9c/eb/679cebf33eb7114f3676f5b9077a11d6.jpg);
+}
+
+.snow-day{
+    background-image: url(https://i.pinimg.com/736x/6a/53/cb/6a53cb92e20af1e5fd95cc6afc10ed43.jpg);
+}
+
+.thunder-day{
+    background-image: url(https://i.pinimg.com/1200x/9d/4a/44/9d4a440f6a0c165ff0c6c4ba3b5ad570.jpg);
+}
+.clear-night{
+    background-image: url(https://i.pinimg.com/736x/64/54/d5/6454d5439947953ce82b77cf1e69d1e4.jpg);
+}
+
+.cloudy-night{
+    background-image: url(https://i.pinimg.com/736x/f4/8a/60/f48a603a6bb0d7789360139c1b3e0558.jpg);
+}
+
+.rain-night{
+    background-image: url(https://i.pinimg.com/1200x/67/9c/eb/679cebf33eb7114f3676f5b9077a11d6.jpg);
+}
+
+.snow-night{
+    background-image: url(https://i.pinimg.com/1200x/26/c8/ab/26c8abfdd7efaa6c4a39f71a87bac419.jpg);
+}
+
+.thunder-night{
+    background-image: url(https://i.pinimg.com/1200x/9d/4a/44/9d4a440f6a0c165ff0c6c4ba3b5ad570.jpg);
+}
