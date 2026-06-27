@@ -2,7 +2,6 @@ const apiKey = "5dfd1b16228a4edb80f162222262306";
 const timezoneEl=document.getElementById("time-zone");
 const input = document.getElementById("cityInput");
 const suggestionsList = document.getElementById("suggestions");
-
 const cityNameEl = document.getElementById("cityName");
 const lastUpdatedEl = document.getElementById("lastUpdated");
 const dateEl = document.getElementById("dateLabel");
@@ -13,6 +12,7 @@ const windEl = document.getElementById("wind");
 const humidityEl = document.getElementById("humidity");
 const uvEl = document.getElementById("uv");
 const aqiEl = document.getElementById("aqi");
+const appBackground = document.getElementById("appBackground");
 
 let debounceTimer;
 
@@ -114,6 +114,7 @@ function renderWeather(data) {
   } else {
     aqiEl.textContent = "N/A";
   }
+  changeBackground(current.condition.text, location.localtime);
 }
 
 function blinkbox(aqi){
@@ -162,4 +163,69 @@ function aqiLabel(pm25) {
   
   return "Hazardous";
   
+}
+function changeBackground(condition, localtime){
+
+    const hour = Number(localtime.split(" ")[1].split(":")[0]);
+    const isDay = hour >= 6 && hour < 19;
+
+    const text = condition.toLowerCase();
+
+    let weather;
+
+    if(text.includes("thunder")){
+        weather = "thunder";
+    }
+    else if(
+        text.includes("rain") ||
+        text.includes("drizzle") ||
+        text.includes("shower")
+    ){
+        weather = "rain";
+    }
+    else if(
+        text.includes("snow") ||
+        text.includes("blizzard") ||
+        text.includes("sleet") ||
+        text.includes("ice")
+    ){
+        weather = "snow";
+    }
+    else if(
+        text.includes("cloud") ||
+        text.includes("overcast")
+    ){
+        weather = "cloudy";
+    }
+    else if(
+        text.includes("mist") ||
+        text.includes("fog")
+    ){
+        weather = "cloudy";
+    }
+    else{
+        weather = "sunny";
+    }
+
+    appBackground.classList.remove(
+        "sunny-day",
+        "cloudy-day",
+        "rain-day",
+        "snow-day",
+        "thunder-day",
+        "clear-night",
+        "cloudy-night",
+        "rain-night",
+        "snow-night",
+        "thunder-night"
+    );
+
+    if(isDay){
+        appBackground.classList.add(`${weather}-day`);
+    }
+    else{
+        appBackground.classList.add(
+            weather==="sunny" ? "clear-night" : `${weather}-night`
+        );
+    }
 }
