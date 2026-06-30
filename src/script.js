@@ -2,7 +2,11 @@ const apiKey = "5dfd1b16228a4edb80f162222262306";
 const timezoneEl=document.getElementById("time-zone");
 const input = document.getElementById("cityInput");
 const suggestionsList = document.getElementById("suggestions");
+const searchButton = document.getElementById("searchButton");
+const statusMessageEl = document.getElementById("statusMessage");
+const cityOptionButtons = document.querySelectorAll(".city-option");
 const cityNameEl = document.getElementById("cityName");
+const changeCityButton = document.getElementById("changeCityButton");
 const lastUpdatedEl = document.getElementById("lastUpdated");
 const dateEl = document.getElementById("dateLabel");
 const conditionTextEl = document.getElementById("conditionText");
@@ -26,6 +30,32 @@ input.addEventListener("input", () => {
   }
   debounceTimer = setTimeout(()=>fetchSuggestions(query), 300);
 });
+
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    selectCity(input.value);
+  }
+});
+
+searchButton.addEventListener("click", () => {
+  selectCity(input.value);
+});
+
+cityOptionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const cityName = button.dataset.city;
+    input.value = cityName;
+    selectCity(cityName);
+  });
+});
+
+if (changeCityButton) {
+  changeCityButton.addEventListener("click", () => {
+    input.focus();
+    input.select();
+  });
+}
 
 async function fetchSuggestions(query) {
   try {
@@ -52,9 +82,11 @@ function renderSuggestions(cities) {
     li.className =
       "px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800 cursor-pointer";
     li.addEventListener("click", () => {
-      input.value = li.textContent;
+      const selectedLabel = li.textContent.trim();
+      input.value = selectedLabel;
       hideSuggestions();
-      getWeatherData(city.lat, city.lon);
+      setStatus(`Showing weather for ${selectedLabel}.`);
+      getWeatherDataByName(selectedLabel);
     });
     suggestionsList.appendChild(li);
   });
@@ -67,11 +99,49 @@ function hideSuggestions() {
   suggestionsList.innerHTML = "";
 }
 
+function setStatus(message, isError = false) {
+  if (!statusMessageEl) return;
+  statusMessageEl.textContent = message;
+  statusMessageEl.classList.toggle("hidden", !message);
+  statusMessageEl.classList.toggle("text-red-400", isError);
+  statusMessageEl.classList.toggle("text-zinc-500", !isError);
+}
+
+function selectCity(query) {
+  const cityName = query.trim();
+
+  if (!cityName) {
+    setStatus("Please enter a city name.", true);
+    return;
+  }
+
+  hideSuggestions();
+  input.value = cityName;
+  setStatus(`Loading weather for ${cityName}...`);
+  getWeatherDataByName(cityName);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  const delhiLat = 28.6139;
-  const delhiLon = 77.2090;
-  getWeatherData(delhiLat, delhiLon);
+  const defaultCity = "Delhi";
+  input.value = defaultCity;
+  setStatus(`Loading weather for ${defaultCity}...`);
+  getWeatherDataByName(defaultCity);
 });
+
+async function getWeatherDataByName(cityName) {
+  try {
+    const res = await fetch(
+      `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(cityName)}&aqi=yes`,
+    );
+    if (!res.ok) throw new Error("City not found");
+    const data = await res.json();
+    renderWeather(data);
+    setStatus(`Showing weather for ${data.location.name}, ${data.location.country}.`);
+  } catch (error) {
+    console.error(error);
+    setStatus(`Could not find weather for ${cityName}.`, true);
+  }
+}
 
 async function getWeatherData(lat, lon) {
   try {
